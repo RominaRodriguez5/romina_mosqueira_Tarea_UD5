@@ -14,7 +14,7 @@ class AuthBackground extends StatelessWidget {
         children: [
           _PurpleBox(),
           _HeaderIcon(),
-          this.child,
+          child,
         ],
       ),
     );
@@ -22,6 +22,7 @@ class AuthBackground extends StatelessWidget {
 }
 
 class _HeaderIcon extends StatelessWidget {
+  const _HeaderIcon();
   @override
   Widget build(BuildContext context) {
     return SafeArea(

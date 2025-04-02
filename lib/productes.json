@@ -1,0 +1,16 @@
+{
+  "products": {
+    "asd456": {
+      "available": false,
+      "name": "RTX3060",
+      "picture": "https://thumb.pccomponentes.com/w-530-530/articles/43/432064/1343-gigabyte-geforce-rtx-3060-gaming-oc-12gb-gddr6-rev-20.jpg",
+      "price": 2999
+    },
+    "qwe123": {
+      "available": true,
+      "name": "PC Gamer",
+      "picture": "https://m.media-amazon.com/images/I/81ulNkvUJuL._AC_SL1500_.jpg",
+      "price": 499
+    }
+  }
+}

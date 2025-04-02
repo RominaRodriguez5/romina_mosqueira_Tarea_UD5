@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:productes_app/models/models.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key}) : super(key: key);
+  final Product product;
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +17,20 @@ class ProductCard extends StatelessWidget {
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: [
-            _BackgroudWidget(),
-            _ProductDetails(),
-            Positioned(top: 0, right: 0, child: _PriceTag()),
-            //TODO: Mostrar de forma condicional depenent de si el producte està disponible o no
-            Positioned(top: 0, left: 0, child: _Availability()),
+            _BackgroudWidget(url: product.picture),
+            _ProductDetails(
+              name: product.name,
+              subtitle: product.id!,
+            ),
+            Positioned(
+                top: 0,
+                right: 0,
+                child: _PriceTag(
+                  price: product.price,
+                )),
+            if (!product.available)
+              //TODO: Mostrar de forma condicional depenent de si el producte està disponible o no
+              Positioned(top: 0, left: 0, child: _Availability()),
           ],
         ),
       ),
@@ -29,7 +40,7 @@ class ProductCard extends StatelessWidget {
   BoxDecoration _cardBorders() => BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             offset: Offset(0, 7),
@@ -40,8 +51,11 @@ class ProductCard extends StatelessWidget {
 }
 
 class _BackgroudWidget extends StatelessWidget {
+  final String? url;
+
   const _BackgroudWidget({
     Key? key,
+    required this.url,
   }) : super(key: key);
 
   @override
@@ -51,21 +65,26 @@ class _BackgroudWidget extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 400,
-        child: FadeInImage(
-          placeholder: AssetImage('assets/jar-loading.gif'),
-          image: NetworkImage('https://via.placeholder.com/400x300/f6f6f6'),
-          fit: BoxFit.cover,
-        ),
+        child: url == null
+            ? Image(
+                image: AssetImage('assets/no-image.png'),
+                fit: BoxFit.cover,
+              )
+            : FadeInImage(
+                placeholder: AssetImage('assets/jar-loading.gif'),
+                image: NetworkImage(url!),
+                fit: BoxFit.cover,
+              ),
       ),
     );
   }
 }
 
 class _ProductDetails extends StatelessWidget {
-  const _ProductDetails({
-    Key? key,
-  }) : super(key: key);
+  final String name, subtitle;
 
+  const _ProductDetails({Key? key, required this.name, required this.subtitle})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -79,7 +98,7 @@ class _ProductDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Disc dur',
+              name,
               style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
@@ -88,7 +107,7 @@ class _ProductDetails extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              'Id producte',
+              subtitle,
               style: TextStyle(fontSize: 10, color: Colors.white),
             ),
           ],
@@ -107,10 +126,9 @@ class _ProductDetails extends StatelessWidget {
 }
 
 class _PriceTag extends StatelessWidget {
-  const _PriceTag({
-    Key? key,
-  }) : super(key: key);
+  final double price;
 
+  const _PriceTag({Key? key, required this.price}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -119,7 +137,7 @@ class _PriceTag extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
-            '99€',
+            '$price€',
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),

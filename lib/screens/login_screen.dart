@@ -30,8 +30,13 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 50),
-              Text('Crear un nou compte',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              TextButton(
+                onPressed: () => Navigator.pushNamed(context, 'register'),
+                child: Text(
+                  'Crear un nou compte',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
               SizedBox(height: 30),
             ],
           ),
@@ -48,7 +53,6 @@ class _LoginForm extends StatelessWidget {
     return Container(
       child: Form(
         key: loginForm.formKey,
-        //TODO: Mantenir la referencia a la Key
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
@@ -63,8 +67,8 @@ class _LoginForm extends StatelessWidget {
               onChanged: (value) => loginForm.email = value,
               validator: (value) {
                 String pattern =
-                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                RegExp regExp = new RegExp(pattern);
+                    r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                RegExp regExp = RegExp(pattern);
                 return regExp.hasMatch(value!) ? null : 'No es de tipus correu';
               },
             ),
@@ -102,15 +106,18 @@ class _LoginForm extends StatelessWidget {
               onPressed: loginForm.isLoading
                   ? null
                   : () async {
-                      // Deshabilitam el teclat
                       FocusScope.of(context).unfocus();
 
-                      if (loginForm.isValidForm()) {
-                        loginForm.isLoading = true;
-                        //Simulam una petició
+                      if (!loginForm.isValidForm()) return;
+
+                      loginForm.isLoading = true;
+                      try {
                         await Future.delayed(Duration(seconds: 2));
-                        loginForm.isLoading = false;
                         Navigator.pushReplacementNamed(context, 'home');
+                      } catch (error) {
+                        print('Error en el login: $error');
+                      } finally {
+                        loginForm.isLoading = false;
                       }
                     },
             ),
